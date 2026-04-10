@@ -4,8 +4,8 @@
   "description": "Buscador de Skills para IA em português — gera arquivos SKILL.md prontos para usar",
   "type": "module",
   "scripts": {
-    "dev": "npx serve public -p 3000",
-    "start": "npx serve public -p 3000"
+    "build": "echo 'Static hosting ready'",
+    "dev": "npx serve public -p 3000"
   },
   "dependencies": {},
   "devDependencies": {

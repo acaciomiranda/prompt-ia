@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "buildCommand": null,
-  "installCommand": null,
-  "devCommand": "npm run dev",
   "cleanUrls": true,
   "headers": [
     {
@@ -10,7 +7,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/javascript; charset=utf-8"
+          "value": "application/javascript; charset=utf-8"
         }
       ]
     }
