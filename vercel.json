@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "outputDirectory": "public",
+  "buildCommand": null,
+  "installCommand": null,
+  "devCommand": "npm run dev",
   "cleanUrls": true,
-  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*).js",
@@ -12,6 +13,12 @@
           "value": "text/javascript; charset=utf-8"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/public/$1"
     }
   ]
 }
