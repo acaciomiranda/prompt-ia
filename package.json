@@ -1,0 +1,14 @@
+{
+  "name": "prompts-ia",
+  "version": "1.0.0",
+  "description": "Buscador de Skills para IA em português — gera arquivos SKILL.md prontos para usar",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "start": "npx serve public -p 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}
