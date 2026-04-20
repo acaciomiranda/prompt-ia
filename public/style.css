@@ -86,7 +86,7 @@ code {
 
 /* ─── Top bar ───────────────────────────────────────────────────────────── */
 .topbar {
-  background: #000;
+  background: var(--surface);
   color: var(--ink);
   padding: 10px 24px;
   display: flex;
@@ -98,7 +98,7 @@ code {
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 .topbar-brand {
@@ -121,7 +121,7 @@ code {
 }
 
 .topbar-hint {
-  color: #888;
+  color: var(--ink3);
 }
 
 .topbar-actions {

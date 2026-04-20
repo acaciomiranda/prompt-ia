@@ -209,6 +209,10 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4.2 — Abril 2026 (Consistência de Tema)
+- ✅ **Topbar Dinâmica**: Corrigido o fundo e bordas da barra superior para se adaptarem ao tema claro (antes permanecia fixo em preto).
+- ✅ **Tipografia Adaptativa**: Ajuste nas cores secundárias e hints do cabeçalho para melhor contraste em fundos claros.
+
 ### v2.4.1 — Abril 2026 (Refinamento de Acessibilidade)
 - ✅ **Design System Light Refinado**: Implementada paleta profissional *Slate/Zinc* para o modo claro, garantindo alto contraste e estética premium.
 - ✅ **Ajustes de Glassmorphism**: Barra de busca e modais agora possuem opacidade e blur otimizados para fundos claros.
