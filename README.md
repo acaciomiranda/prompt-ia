@@ -209,6 +209,12 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4.1 — Abril 2026 (Refinamento de Acessibilidade)
+- ✅ **Design System Light Refinado**: Implementada paleta profissional *Slate/Zinc* para o modo claro, garantindo alto contraste e estética premium.
+- ✅ **Ajustes de Glassmorphism**: Barra de busca e modais agora possuem opacidade e blur otimizados para fundos claros.
+- ✅ **Glow Balance**: Redução da intensidade dos efeitos de neon no modo claro para evitar poluição visual e melhorar o foco no conteúdo.
+- ✅ **Toast e UI Polida**: Melhoria nas sombras, bordas e mensagens flutuantes para visibilidade total em qualquer tema.
+
 ### v2.4 — Abril 2026 (Bugs e Melhorias Avançadas)
 - ✅ **Extermínio de Race Conditions**: Implementado `generatingCache` para evitar múltiplas gerações simultâneas de uma mesma skill.
 - ✅ **Exportação em Lote (ZIP)**: Adicionado suporte à biblioteca `JSZip` para baixar todas as skills de uma busca em um único arquivo comprimido.
