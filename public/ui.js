@@ -61,6 +61,14 @@ export function updateApiKeyUI() {
     }
 }
 
+export function updateRateLimitUI(remaining) {
+    const el = getEl('rate-limit-indicator');
+    if (el) {
+        el.textContent = `${remaining} reqs. API`;
+        el.style.display = 'inline-block';
+    }
+}
+
 export function populateModelSelect() {
     const sel = getEl('model-select');
     if (!sel) return;
@@ -130,7 +138,7 @@ export function renderSkills(skills, query) {
     if (!list) return;
     list.innerHTML = '';
 
-    skills.forEach(skill => {
+    skills.forEach((skill, index) => {
         const badgeClass = skill.relevance === 'exact' ? 'badge-exact' : 'badge-related';
         const badgeLabel = skill.relevance === 'exact' ? 'EXATA' : 'RELACIONADA';
         const tagsHtml = (skill.tags || []).slice(0, 4)
@@ -140,7 +148,8 @@ export function renderSkills(skills, query) {
         const safeId = String(skill.id || '').replace(/[^a-z0-9\-_]/gi, '');
 
         const card = document.createElement('div');
-        card.className = 'skill-card';
+        card.className = 'skill-card fade-in-up';
+        card.style.animationDelay = `${index * 0.12}s`;
         card.innerHTML = `
       <div class="skill-card-body">
         <div class="skill-card-head">

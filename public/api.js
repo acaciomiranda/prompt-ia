@@ -66,6 +66,11 @@ export async function callAI({ system, user, maxTokens = 2048, _modelOverride })
 
             clearTimeout(timeout);
 
+            const remaining = res.headers.get('x-ratelimit-remaining') || res.headers.get('x-ratelimit-limit-requests-remaining');
+            if (remaining !== null && window.updateRateLimitUI) {
+                window.updateRateLimitUI(remaining);
+            }
+
             if (!res.ok) {
                 const err = await res.json().catch(() => ({}));
                 const msg = err?.error?.message || `HTTP ${res.status}`;

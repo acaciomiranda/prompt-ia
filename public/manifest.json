@@ -1,0 +1,16 @@
+{
+  "name": "Prompts IA",
+  "short_name": "Prompts IA",
+  "description": "Buscador de Skills para IA em português.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "./brain.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ]
+}

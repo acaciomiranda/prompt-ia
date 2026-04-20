@@ -2,13 +2,36 @@
 import { getApiKey, saveModel, callAI, extractJSON } from './api.js';
 import { 
     getEl, hide, show, setLoading, showToast, renderSkills, 
-    updateApiKeyUI, openApiKeyModal, closeApiKeyModal, closeModal, triggerDownload, escHtml
+    updateApiKeyUI, updateRateLimitUI, openApiKeyModal, closeApiKeyModal, closeModal, triggerDownload, escHtml
 } from './ui.js';
 
 // Expor funções UI para uso no HTML (onclick=...)
 window.openApiKeyModal = openApiKeyModal;
 window.closeApiKeyModal = closeApiKeyModal;
 window.closeModal = closeModal;
+window.updateRateLimitUI = updateRateLimitUI;
+
+// ─── Histórico de Busca ───────────────────────────────────────────────────────
+function updateSearchHistory(query) {
+    let history = JSON.parse(localStorage.getItem('prompts_ia_history') || '[]');
+    history = history.filter(item => item.toLowerCase() !== query.toLowerCase()); // Remove duplicado
+    history.unshift(query);
+    history = history.slice(0, 10); // Mantem os ultimos 10 res
+    localStorage.setItem('prompts_ia_history', JSON.stringify(history));
+    renderSearchHistory();
+}
+
+function renderSearchHistory() {
+    const list = getEl('search-history');
+    if (!list) return;
+    const history = JSON.parse(localStorage.getItem('prompts_ia_history') || '[]');
+    list.innerHTML = '';
+    history.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        list.appendChild(opt);
+    });
+}
 
 // ─── UI State ─────────────────────────────────────────────────────────────────
 let currentSkills  = [];
@@ -54,6 +77,7 @@ window.doSearch = async function() {
 
     currentSkills = skills;
     renderSkills(skills, q);
+    updateSearchHistory(q);
     show('results-area');
 
   } catch (err) {
@@ -232,6 +256,7 @@ window.previewSkill = async function(id) {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+  renderSearchHistory();
   updateApiKeyUI();
   getEl('search-input').focus();
 
