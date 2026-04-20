@@ -60,12 +60,16 @@ function debounce(fn, delay) {
 const debouncedSearch = debounce(() => withErrorBoundary(doSearch), 300);
 
 // ─── Search ───────────────────────────────────────────────────────────────────
+let isSearching = false;
+
 function quickSearch(q) {
   getEl('search-input').value = q;
   debouncedSearch();
 }
 
 async function doSearch() {
+  if (isSearching) return;
+  
   const q = getEl('search-input').value.trim();
   if (!q) return;
 
@@ -74,6 +78,7 @@ async function doSearch() {
     return;
   }
 
+  isSearching = true;
   setLoading(true, 'Consultando a IA...');
   hide('results-area');
   
@@ -123,6 +128,8 @@ async function doSearch() {
     }
   } finally {
     setLoading(false);
+    // Cooldown de 2 segundos para evitar spam
+    setTimeout(() => { isSearching = false; }, 2000);
   }
 }
 
@@ -163,7 +170,6 @@ FORMATO OBRIGATÓRIO:
 Gere 4 skills (2 exatas, 2 relacionadas) para este tema. Retorne o resultado em formato JSON.`;
 
   const raw = await callAI({ system, user, maxTokens: 2048 });
-  console.log('[AI Search Raw Response]:', raw);
   return extractJSON(raw);
 }
 

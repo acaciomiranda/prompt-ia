@@ -28,7 +28,15 @@ export const FALLBACK_CHAIN = [
     'openrouter/free',
 ];
 
-export function getApiKey() { return localStorage.getItem('prompts_ia_api_key') || ''; }
+export function getApiKey() { 
+    const key = localStorage.getItem('prompts_ia_api_key') || ''; 
+    // Validação de segurança: Verifica se a chave segue o padrão OpenRouter sk-or-v1-...
+    if (key && !key.startsWith('sk-or-v1-')) {
+        console.warn('[SECURITY] API Key com formato inválido detectada no storage.');
+        return '';
+    }
+    return key;
+}
 export function getModel() { return localStorage.getItem('prompts_ia_model') || DEFAULT_MODEL; }
 export function saveModel(id) { localStorage.setItem('prompts_ia_model', id); }
 

@@ -147,7 +147,7 @@ export async function renderSkills(skills, query) {
             const badgeClass = skill.relevance === 'exact' ? 'badge-exact' : 'badge-related';
             const badgeLabel = skill.relevance === 'exact' ? 'EXATA' : 'RELACIONADA';
             const tagsHtml = (skill.tags || []).slice(0, 4)
-                .map(t => `<span class="stag">${escHtml(t)}</span>`).join('');
+                .map(t => `<span class="stag">${escHtml(String(t))}</span>`).join('');
 
             // Sanitiza o ID para prevenir injeção de código via resposta da IA
             const safeId = String(skill.id || '').replace(/[^a-z0-9\-_]/gi, '');

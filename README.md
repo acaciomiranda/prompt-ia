@@ -209,6 +209,12 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.0 — Abril 2026 (Segurança e Robustez)
+- ✅ **Content Security Policy (CSP)**: Implementada Meta Tag CSP rigorosa para mitigar XSS e exfiltração de dados (bloqueio de origens não autorizadas).
+- ✅ **Validação Estrita de API Key**: O sistema agora valida o formato oficial do OpenRouter (`sk-or-v1-`) antes de aceitar a chave, prevenindo o uso de dados corrompidos.
+- ✅ **XSS Defense-in-Depth**: Auditoria e reforço de escaping (`escHtml`) em 100% dos campos dinâmicos retornados pela IA (incluindo tags e IDs).
+- ✅ **Anti-Spam & Privacy**: Implementado "Search Cooldown" (trava de 2s entre buscas) para evitar abuso da API. Remoção de todos os logs de console remanescentes que poderiam expor dados da resposta.
+
 ### v1.9 — Abril 2026 (Performance e Otimização)
 - ✅ **Font Loading**: Implementado carregamento assíncrono de fontes com `preload` e técnica de deferred loading (melhoria em LCP/FCP).
 - ✅ **Batch Character Rendering**: Renderização de cards em lotes (batching) com `requestAnimationFrame` para evitar travamentos da Main-Thread.
