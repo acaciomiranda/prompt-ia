@@ -851,6 +851,21 @@ code {
 }
 
 /* ─── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero h1 { font-size: clamp(32px, 5vw, 42px); }
+  .premium-search-container { max-width: 85%; }
+  .hero { margin-top: 60px; }
+}
+
+@media (max-width: 768px) {
+  .hero p { max-width: 90%; }
+  .premium-search-container { max-width: 95%; }
+  .quick-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .tag { padding: 8px 12px; font-size: 13px; }
+  .topbar { padding: 12px 20px; }
+  .active-model-indicator { display: none !important; }
+}
+
 @media (max-width: 640px) {
   .skill-card {
     grid-template-columns: 1fr;

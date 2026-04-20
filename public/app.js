@@ -31,7 +31,17 @@ window.doSearch = async function() {
 
   setLoading(true, 'Consultando a IA...');
   hide('results-area');
+  
+  // S6: Restaura o empty state original caso tenha sido sobrescrito por um erro anterior
+  getEl('empty-state').innerHTML = `
+      <div class="icon">🔍</div>
+      <p>Nenhuma skill encontrada.<br>Tente termos diferentes.</p>
+  `;
   getEl('empty-state').classList.remove('show');
+  
+  // S8: Atualizar título da página dinamicamente para SEO
+  document.title = `Busca: ${q} — prompts-ia`;
+
   previewCache = {};
 
   try {
