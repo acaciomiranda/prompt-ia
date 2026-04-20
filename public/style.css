@@ -151,27 +151,31 @@ code {
 }
 
 .btn-api-key {
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  background: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  color: var(--ink2);
-  padding: 8px 14px;
+  color: #000;
+  padding: 8px 16px;
   min-height: 38px;
   font-family: 'DM Mono', monospace;
   font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-api-key:hover {
-  background: var(--border);
-  color: var(--ink);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
 }
 
 .btn-api-key.configured {
-  color: #6ee7b7;
-  border-color: rgba(110, 231, 183, 0.3);
+  border-color: #000;
 }
 
 /* ─── Hero ──────────────────────────────────────────────────────────────── */

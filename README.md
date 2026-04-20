@@ -209,6 +209,10 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4.3 — Abril 2026 (UI de Configurações)
+- ✅ **CTA de Configurações**: Botão de API Key agora possui cor vibrante (Laranja/Preto) para facilitar a localização pelo usuário e destacar a ação principal de setup.
+- ✅ **Micro-interações**: Adicionado efeito de elevação e brilho ao pairar sobre o botão de configurações.
+
 ### v2.4.2 — Abril 2026 (Consistência de Tema)
 - ✅ **Topbar Dinâmica**: Corrigido o fundo e bordas da barra superior para se adaptarem ao tema claro (antes permanecia fixo em preto).
 - ✅ **Tipografia Adaptativa**: Ajuste nas cores secundárias e hints do cabeçalho para melhor contraste em fundos claros.
