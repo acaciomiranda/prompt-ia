@@ -42,8 +42,12 @@ export async function callAI({ system, user, maxTokens = 2048, _modelOverride })
 
     for (const model of chain) {
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 30000);
+
             const res = await fetch(OPENROUTER_URL, {
                 method: 'POST',
+                signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${key}`,
@@ -59,6 +63,8 @@ export async function callAI({ system, user, maxTokens = 2048, _modelOverride })
                     ],
                 }),
             });
+
+            clearTimeout(timeout);
 
             if (!res.ok) {
                 const err = await res.json().catch(() => ({}));
@@ -76,6 +82,10 @@ export async function callAI({ system, user, maxTokens = 2048, _modelOverride })
 
         } catch (err) {
             if (err.message === 'API_KEY_INVALID') throw err;
+            if (err.name === 'AbortError') {
+                lastError = new Error('Timeout: a IA demorou mais de 30s para responder. Tente novamente.');
+                continue;
+            }
             lastError = err;
         }
     }

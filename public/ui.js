@@ -126,6 +126,9 @@ export function renderSkills(skills, query) {
         const tagsHtml = (skill.tags || []).slice(0, 4)
             .map(t => `<span class="stag">${escHtml(t)}</span>`).join('');
 
+        // Sanitiza o ID para prevenir injeção de código via resposta da IA
+        const safeId = String(skill.id || '').replace(/[^a-z0-9\-_]/gi, '');
+
         const card = document.createElement('div');
         card.className = 'skill-card';
         card.innerHTML = `
@@ -139,15 +142,23 @@ export function renderSkills(skills, query) {
         <div class="skill-tags">${tagsHtml}</div>
       </div>
       <div class="skill-actions">
-        <!-- O window. garante que a função será chamada corretamente pelo HTML modular -->
-        <button class="btn-dl" id="dl-${skill.id}" onclick="window.downloadSkill('${skill.id}', this)">
+        <button class="btn-dl" id="dl-${safeId}" data-skill-id="${safeId}">
           ⬇ Baixar SKILL.md
         </button>
-        <button class="btn-secondary" onclick="window.previewSkill('${skill.id}')">
+        <button class="btn-secondary" data-preview-id="${safeId}">
           👁 Visualizar
         </button>
       </div>
     `;
+
+        // Event listeners seguros em vez de onclick inline
+        card.querySelector('.btn-dl').addEventListener('click', function() {
+            window.downloadSkill(safeId, this);
+        });
+        card.querySelector('.btn-secondary').addEventListener('click', function() {
+            window.previewSkill(safeId);
+        });
+
         list.appendChild(card);
     });
 }
