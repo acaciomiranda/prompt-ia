@@ -115,7 +115,8 @@ code {
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   color: #ccc;
-  padding: 5px 12px;
+  padding: 8px 14px;
+  min-height: 38px;
   font-family: 'DM Mono', monospace;
   font-size: 11px;
   cursor: pointer;
@@ -299,11 +300,12 @@ code {
   align-items: center;
   gap: 6px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 20px;
   transition: all 0.2s ease;
-  padding: 6px 12px;
+  padding: 12px 20px;
+  min-height: 44px;
 }
 
 .btn-outline {
@@ -329,10 +331,12 @@ code {
   border: 1.5px solid #3B82F6;
   color: #60A5FA;
   border-radius: 50%;
-  height: 36px;
-  width: 36px;
+  height: 44px;
+  width: 44px;
   padding: 0;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .btn-send:hover {
@@ -575,13 +579,14 @@ code {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 11px 16px;
+  padding: 12px 20px;
+  min-height: 44px;
   background: var(--accent);
   color: white;
   border: none;
   border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -613,13 +618,14 @@ code {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 14px;
+  padding: 12px 18px;
+  min-height: 44px;
   background: transparent;
   color: var(--ink2);
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -913,27 +919,69 @@ code {
   .tag { padding: 8px 12px; font-size: 13px; }
   .topbar { padding: 12px 20px; }
   .active-model-indicator { display: none !important; }
+  .skills-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
+  .modal, .apikey-box {
+    width: 95% !important;
+    max-height: 90vh;
+    margin: 5vh auto;
+    overflow-y: auto;
+  }
+
+  .modal-code {
+    font-size: 12px;
+  }
+
   .skill-card {
     grid-template-columns: 1fr;
   }
 
   .skill-actions {
     flex-direction: row;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
   }
 
   .btn-dl,
   .btn-secondary {
     flex: 1;
+    font-size: 12px;
+    padding: 10px;
   }
 
   .hero {
     margin-top: 36px;
   }
 
+  .hero h1 { font-size: 28px; }
+
   .topbar-hint {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-brand { font-size: 14px; }
+  
+  .premium-search-actions { 
+    flex-direction: column; 
+    gap: 12px;
+  }
+  
+  .premium-actions-left {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .premium-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btn-send {
+    width: 100%;
+    height: 48px;
   }
 }

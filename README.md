@@ -209,6 +209,14 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.2 — Abril 2026 (Responsividade e Mobile UX)
+- ✅ **Touch Targets (44px)**: Todos os botões e áreas clicáveis foram aumentados para garantir conformidade com Apple HIG e Android UX (mínimo 44x44px).
+- ✅ **Refino de Breakpoints (Mobile-First)**:
+  - **480px**: Ações de busca reorganizadas em coluna para evitar quebras em telas estreitas.
+  - **640px**: Modais agora ocupam 95% da largura e código de preview ajustado para 12px para máxima legibilidade.
+  - **768px**: Grid de resultados adaptável para 1 coluna e escala tipográfica do Hero otimizada.
+- ✅ **Visibilidade Inteligente**: Elementos secundários (como dicas da topbar) são ocultados em telas pequenas para priorizar a busca.
+
 ### v2.1 — Abril 2026 (Acessibilidade e Inclusão)
 - ✅ **Focus Management & Trap**: Implementado controle de foco rígido em modais (`ui.js`). O foco agora é capturado ao abrir, mantido dentro do modal (trap) e restaurado ao fechar.
 - ✅ **Semântica ARIA**: Adição de `aria-label`, `aria-hidden` e `aria-modal` para melhor experiência com leitores de tela.
