@@ -209,6 +209,9 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4.5 — Abril 2026 (Correção de Contraste)
+- ✅ **Hotfix Toast**: Corrigida a visibilidade das mensagens flutuantes no modo escuro (antes o texto ficava branco sobre o fundo branco). O Toast agora inverte as cores conforme o tema para garantir leitura instantânea.
+
 ### v2.4.4 — Abril 2026 (Refinamento Estético)
 - ✅ **Suavização de CTA**: O botão de API Key foi redesenhado com um estilo "Ghost-Tint" (contorno e fundo sutil), tornando-o mais profissional e integrado à linguagem visual do site.
 - ✅ **Polimento de Hover**: Transições de cor e elevação suavizadas para uma experiência de usuário mais fluida e menos agressiva visualmente.

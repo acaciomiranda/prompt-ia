@@ -975,14 +975,14 @@ code {
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%) translateY(80px);
-  background: var(--ink);
-  color: #fff;
+  background: #FFFFFF;
+  color: #000000;
   padding: 11px 24px;
   border-radius: 99px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   z-index: 300;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   white-space: nowrap;
@@ -991,8 +991,9 @@ code {
 }
 
 [data-theme="light"] .toast {
-  color: #fff;
-  background: #0F172A; /* Slate 900 fixo para garantir leitura */
+  color: #FFFFFF;
+  background: #0F172A;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .toast.show {
