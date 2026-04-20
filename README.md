@@ -3,17 +3,21 @@
 **Buscador de Skills para IA em português.**
 Digite o que você precisa, escolha o modelo, e receba arquivos `SKILL.md` prontos para usar no Claude Code, Cursor, Windsurf e outros agentes de IA.
 
+🔗 **Demo:** [prompt-ia-woad.vercel.app](https://prompt-ia-woad.vercel.app/)
+
 ---
 
 ## ✨ Funcionalidades
 
 - 🔍 **Busca em português** — sem precisar saber o nome técnico da skill em inglês
 - 🤖 **Multi-modelo** — escolha entre modelos gratuitos e pagos via OpenRouter
-- 🆓 **Modelos gratuitos incluídos** — Gemma 3, Llama 4, DeepSeek, Mistral e mais (sem custo por token)
+- 🆓 **Modelos gratuitos incluídos** — Gemma 3, Llama 4, DeepSeek R1, Qwen3 e mais (sem custo por token)
 - ⬇️ **Download direto** — gera e baixa o `SKILL.md` com um clique
 - 👁️ **Preview antes de baixar** — visualize o conteúdo do arquivo antes de salvar
 - 💾 **Configuração persistente** — API Key e modelo ficam salvos no browser
 - 🚀 **Zero dependências** — HTML + CSS + JS puro, abre direto no browser
+- 🔒 **Seguro** — sanitização de inputs, sem coleta de dados, chaves ficam apenas no seu browser
+- ⏱️ **Timeout inteligente** — fallback automático para outro modelo se um demorar mais de 30s
 
 ---
 
@@ -26,7 +30,8 @@ prompts-ia/
 │   ├── style.css      ← Design System (Glassmorphism & Glow)
 │   ├── app.js         ← Orquestrador do aplicativo (ES Modules)
 │   ├── api.js         ← Módulo de comunicação com OpenRouter
-│   └── ui.js          ← Módulo de manipulação de Interface e DOM
+│   ├── ui.js          ← Módulo de manipulação de Interface e DOM
+│   └── brain.svg      ← Favicon do app
 ├── package.json       ← Scripts de desenvolvimento
 ├── vercel.json        ← Config de deploy no Vercel
 ├── .gitignore
@@ -39,6 +44,8 @@ prompts-ia/
 
 ### Opção 1 — Abrir direto no browser (mais simples)
 Abra o arquivo `public/index.html` no seu browser. Não precisa de servidor nem instalação.
+
+> ⚠️ Atenção: ao abrir como arquivo local (`file://`), os ES Modules podem ser bloqueados pelo browser por motivos de segurança (CORS). Use a Opção 2 para desenvolvimento local.
 
 ### Opção 2 — Servidor local
 ```bash
@@ -74,13 +81,16 @@ A aplicação usa a **OpenRouter API** — um gateway unificado que dá acesso a
 
 ### 🆓 Gratuitos (sem custo por token)
 
-| Modelo | Provider | Destaque |
+| Modelo | ID no OpenRouter | Destaque |
 |---|---|---|
-| **Gemma 3 27B** | Google | Modelo open-weight de alta qualidade, 27B parâmetros |
-| **Llama 4 Maverick** | Meta | Arquitetura MoE, excelente para tarefas gerais |
-| **Llama 4 Scout** | Meta | Versão leve e rápida do Llama 4 |
-| **DeepSeek Chat V3** | DeepSeek | Muito competitivo, ótimo custo-benefício |
-| **Mistral Small 3.1** | Mistral | Leve, rápido e capaz para a maioria das tarefas |
+| **Gemma 3 27B** | `google/gemma-3-27b-it:free` | Modelo open-weight de alta qualidade, 27B parâmetros |
+| **Llama 4 Maverick** | `meta-llama/llama-4-maverick:free` | Arquitetura MoE, excelente para tarefas gerais |
+| **Llama 4 Scout** | `meta-llama/llama-4-scout:free` | Versão leve e rápida do Llama 4 |
+| **Llama 3.3 70B** | `meta-llama/llama-3.3-70b-instruct:free` | Muito capaz, boa escolha para texto longo |
+| **DeepSeek R1** | `deepseek/deepseek-r1:free` | Modelo de raciocínio (chain-of-thought) |
+| **Mistral Small 3.1** | `mistralai/mistral-small-3.1-24b-instruct:free` | Leve, rápido e capaz |
+| **Qwen3 8B** | `qwen/qwen3-8b:free` | Modelo compacto da Alibaba com bom desempenho |
+| **Auto-Gratuito** | `openrouter/free` | OpenRouter escolhe o melhor modelo gratuito disponível |
 
 > Modelos gratuitos têm limite de ~20 requisições/minuto e 200/dia no OpenRouter.
 
@@ -92,12 +102,23 @@ A aplicação usa a **OpenRouter API** — um gateway unificado que dá acesso a
 | Gemini 2.5 Pro | Google |
 | GPT-4o Mini | OpenAI |
 | GPT-4o | OpenAI |
-| o3 Mini | OpenAI |
 | Claude Sonnet 4.5 | Anthropic |
 | Claude Haiku 4.5 | Anthropic |
 | DeepSeek Chat V3 | DeepSeek |
-| Qwen3 30B | Alibaba |
 | Mistral Small 3.1 | Mistral |
+
+---
+
+## 🔄 Fallback automático de modelos
+
+Se o modelo principal falhar (indisponível, erro de rede, ou timeout), o sistema tenta automaticamente os modelos de fallback na seguinte ordem:
+
+1. Modelo selecionado pelo usuário
+2. `meta-llama/llama-3.3-70b-instruct:free`
+3. `mistralai/mistral-small-3.1-24b-instruct:free`
+4. `openrouter/free`
+
+Cada modelo tem **timeout de 30 segundos**. Se não responder no tempo, passa para o próximo.
 
 ---
 
@@ -155,7 +176,45 @@ Use o conteúdo do `## Prompt` como system prompt da sua configuração.
 
 ---
 
+## 🔒 Segurança
+
+- **API Key no localStorage**: sua chave nunca sai do browser, exceto nas chamadas diretas ao OpenRouter
+- **Sanitização de inputs**: todos os dados retornados pela IA são sanitizados antes de serem inseridos no DOM (`escHtml`)
+- **IDs seguros**: os IDs das skills geradas pela IA passam por um regex que remove caracteres especiais antes de qualquer uso em eventos (`/[^a-z0-9\-_]/gi`)
+- **Event listeners**: os botões de ação usam `addEventListener` em vez de `onclick` inline para evitar injeção de código
+
+---
+
+## 🏗️ Arquitetura técnica
+
+O projeto é uma SPA (Single Page Application) sem bundler — HTML + CSS + JS puro com ES Modules nativos do browser.
+
+```
+index.html
+    └── <script type="module" src="app.js">
+            ├── import from './api.js'    ← fetch, modelos, extractJSON
+            └── import from './ui.js'     ← DOM, renderização, modais
+```
+
+### Detalhes de cada módulo
+
+| Arquivo | Responsabilidade |
+|---|---|
+| `app.js` | Orquestração, event handlers globais (`window.*`), lógica de busca e download |
+| `api.js` | Configuração de modelos, chamadas fetch com AbortController, parse de JSON da IA |
+| `ui.js` | Renderização de cards, modais, toast, download de arquivos |
+| `style.css` | Design system com variáveis CSS, dark mode, glassmorphism, responsividade |
+
+---
+
 ## 📝 Histórico de atualizações
+
+### v1.6 — Abril 2026
+- ✅ **Favicon adicionado**: ícone `brain.svg` 🧠 aparece na aba do browser
+- ✅ **Timeout de 30s na API**: uso de `AbortController` para cancelar chamadas lentas e tentar o próximo modelo automaticamente
+- ✅ **Sanitização de `skill.id`**: IDs retornados pela IA passam por regex `/[^a-z0-9\-_]/gi` antes de qualquer uso
+- ✅ **Event listeners seguros**: botões de ação migrados de `onclick` inline para `addEventListener`, eliminando risco de injeção via resposta da IA
+- ✅ **README atualizado**: documentação completa de segurança, arquitetura e modelos
 
 ### v1.5 — Abril 2026
 - ✅ **Arquitetura ES Modules**: código separado em `api.js`, `ui.js` e `app.js` com `import/export` nativos
@@ -163,13 +222,13 @@ Use o conteúdo do `## Prompt` como system prompt da sua configuração.
 - ✅ **`api-banner` adaptado ao dark mode**: cores amarelas legíveis sobre fundo escuro
 - ✅ **`.error-details`** adicionado ao CSS: exibição de erros técnicos com estilo consistente
 - ✅ **Botão "Attach files" desabilitado** visualmente para evitar confusão na versão de demo
-- ✅ **`topbar` corrigida**: fundo `#000` com borda sutil, sem redundância de variáveis de cor
+- ✅ **`topbar` corrigida**: fundo `#000` com borda sutil
 - ✅ **`extractJSON` aprimorado**: 4 estratégias de parse para máxima resiliência
 
 ### v1.4 — Abril 2026
-- ✅ **Novo layout da barra de buscas**: Redesign premium com tema escuro (Dark Mode).
-- ✅ Implementados efeitos visuais avançados: Glassmorphism e glow animado.
-- ✅ Botão "Deep thinking" configurado como atalho para as configurações de modelo.
+- ✅ **Novo layout da barra de buscas**: Redesign premium com tema escuro (Dark Mode)
+- ✅ Implementados efeitos visuais avançados: Glassmorphism e glow animado
+- ✅ Botão "Deep thinking" configurado como atalho para as configurações de modelo
 
 ### v1.3 — Abril 2026
 - ✅ Adicionados **5 modelos gratuitos** via OpenRouter: Gemma 3 27B, Llama 4 Maverick, Llama 4 Scout, DeepSeek Chat V3 (free), Mistral Small 3.1 (free)
