@@ -209,6 +209,13 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.3 — Abril 2026 (Boas Práticas e Código Limpo)
+- ✅ **Configurações Centralizadas**: Eliminação de "Magic Numbers" através do objeto `CONFIG` (`api.js`), centralizando timeouts, limites de histórico e tamanhos de lote.
+- ✅ **Validação de Entrada**: Implementada validação UX no campo de busca (mínimo 3 caracteres ou aviso de campo vazio via Toast).
+- ✅ **Refatoração DRY (ui.js)**: Centralização do gerenciamento de estado vazio (`resetEmptyState`) e lógica de download, reduzindo callbacks aninhados em `app.js`.
+- ✅ **Suite de Testes Unitários**: Criado `test.js` para validação de funções críticas como sanitização XSS e extração de JSON da IA.
+- ✅ **Aumento de Eficiência**: O limite máximo de tokens foi otimizado para `4096` no objeto `CONFIG` para suportar respostas mais complexas se necessário.
+
 ### v2.2 — Abril 2026 (Responsividade e Mobile UX)
 - ✅ **Touch Targets (44px)**: Todos os botões e áreas clicáveis foram aumentados para garantir conformidade com Apple HIG e Android UX (mínimo 44x44px).
 - ✅ **Refino de Breakpoints (Mobile-First)**:

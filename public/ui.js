@@ -1,5 +1,5 @@
 // ui.js
-import { getApiKey, getModel, MODELS, DEFAULT_MODEL } from './api.js';
+import { getApiKey, getModel, MODELS, DEFAULT_MODEL, CONFIG } from './api.js';
 
 export function getEl(id) {
     return document.getElementById(id);
@@ -15,14 +15,27 @@ export function hide(id) {
 
 export function setLoading(on, label = 'Buscando skills...') {
     const el = getEl('loading');
-    if (el) el.classList.toggle('show', on);
+    if (el) {
+        el.classList.toggle('show', on);
+        el.setAttribute('aria-hidden', !on);
+    }
     const loadingLabel = getEl('loading-label');
     if (loadingLabel) loadingLabel.textContent = label;
     const searchBtn = getEl('search-btn');
     if (searchBtn) searchBtn.disabled = on;
 }
 
-export function showToast(msg, duration = 3000) {
+export function resetEmptyState() {
+    const el = getEl('empty-state');
+    if (!el) return;
+    el.innerHTML = `
+        <div class="icon">🔍</div>
+        <p>Nenhuma skill encontrada.<br>Tente termos diferentes.</p>
+    `;
+    el.classList.remove('show');
+}
+
+export function showToast(msg, duration = CONFIG.TOAST_DURATION_MS) {
     const t = getEl('toast');
     if (!t) return;
     t.textContent = msg;
@@ -165,6 +178,12 @@ export function openPreviewModal() {
     setupFocusTrap('modal', closeModal);
 }
 
+export function handleDownloadFromPreview(skill, content) {
+    triggerDownload(`${skill.id}.SKILL.md`, content);
+    showToast(`✓ ${skill.title_pt} — baixado!`);
+    closeModal();
+}
+
 export function triggerDownload(filename, content) {
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -187,7 +206,7 @@ export async function renderSkills(skills, query) {
     if (!list) return;
     list.innerHTML = '';
 
-    const BATCH_SIZE = 4;
+    const BATCH_SIZE = CONFIG.BATCH_SIZE;
     for (let i = 0; i < skills.length; i += BATCH_SIZE) {
         const batch = skills.slice(i, i + BATCH_SIZE);
         

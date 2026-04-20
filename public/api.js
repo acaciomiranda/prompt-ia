@@ -28,6 +28,16 @@ export const FALLBACK_CHAIN = [
     'openrouter/free',
 ];
 
+export const CONFIG = {
+    API_TIMEOUT_MS: 30000,
+    MAX_TOKENS: 4096,
+    SEARCH_HISTORY_LIMIT: 10,
+    SEARCH_DEBOUNCE_MS: 300,
+    SEARCH_COOLDOWN_MS: 2000,
+    TOAST_DURATION_MS: 3000,
+    BATCH_SIZE: 4
+};
+
 export function getApiKey() { 
     const key = localStorage.getItem('prompts_ia_api_key') || ''; 
     // Validação de segurança: Verifica se a chave segue o padrão OpenRouter sk-or-v1-...
@@ -40,7 +50,7 @@ export function getApiKey() {
 export function getModel() { return localStorage.getItem('prompts_ia_model') || DEFAULT_MODEL; }
 export function saveModel(id) { localStorage.setItem('prompts_ia_model', id); }
 
-export async function callAI({ system, user, maxTokens = 2048, _modelOverride }) {
+export async function callAI({ system, user, maxTokens = CONFIG.MAX_TOKENS, _modelOverride }) {
     const key = getApiKey();
     if (!key) throw new Error('API_KEY_MISSING');
 
@@ -51,7 +61,7 @@ export async function callAI({ system, user, maxTokens = 2048, _modelOverride })
     for (const model of chain) {
         try {
             const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 30000);
+            const timeout = setTimeout(() => controller.abort(), CONFIG.API_TIMEOUT_MS);
 
             const res = await fetch(OPENROUTER_URL, {
                 method: 'POST',

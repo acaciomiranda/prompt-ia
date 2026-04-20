@@ -1,8 +1,9 @@
 // app.js
-import { getApiKey, saveModel, callAI, extractJSON } from './api.js';
+import { getApiKey, saveModel, callAI, extractJSON, CONFIG } from './api.js';
 import { 
     getEl, hide, show, setLoading, showToast, renderSkills, 
-    updateApiKeyUI, updateRateLimitUI, openApiKeyModal, closeApiKeyModal, closeModal, triggerDownload, escHtml
+    updateApiKeyUI, updateRateLimitUI, openApiKeyModal, closeApiKeyModal, closeModal, 
+    triggerDownload, escHtml, resetEmptyState, handleDownloadFromPreview, openPreviewModal
 } from './ui.js';
 import { AppState } from './state.js';
 
@@ -25,7 +26,7 @@ function updateSearchHistory(query) {
     let history = JSON.parse(localStorage.getItem('prompts_ia_history') || '[]');
     history = history.filter(item => item.toLowerCase() !== query.toLowerCase()); // Remove duplicado
     history.unshift(query);
-    history = history.slice(0, 10); // Mantem os ultimos 10 res
+    history = history.slice(0, CONFIG.SEARCH_HISTORY_LIMIT); 
     localStorage.setItem('prompts_ia_history', JSON.stringify(history));
     renderSearchHistory();
 }
@@ -57,7 +58,7 @@ function debounce(fn, delay) {
     timeoutId = setTimeout(() => fn.apply(this, args), delay);
   };
 }
-const debouncedSearch = debounce(() => withErrorBoundary(doSearch), 300);
+const debouncedSearch = debounce(() => withErrorBoundary(doSearch), CONFIG.SEARCH_DEBOUNCE_MS);
 
 // ─── Search ───────────────────────────────────────────────────────────────────
 let isSearching = false;
@@ -71,7 +72,16 @@ async function doSearch() {
   if (isSearching) return;
   
   const q = getEl('search-input').value.trim();
-  if (!q) return;
+  
+  if (!q) {
+    showToast('⚠️ Digite algo para buscar');
+    return;
+  }
+  
+  if (q.length < 3) {
+    showToast('⚠️ Digite pelo menos 3 caracteres');
+    return;
+  }
 
   if (!getApiKey()) {
     openApiKeyModal();
@@ -81,13 +91,7 @@ async function doSearch() {
   isSearching = true;
   setLoading(true, 'Consultando a IA...');
   hide('results-area');
-  
-  // S6: Restaura o empty state original caso tenha sido sobrescrito por um erro anterior
-  getEl('empty-state').innerHTML = `
-      <div class="icon">🔍</div>
-      <p>Nenhuma skill encontrada.<br>Tente termos diferentes.</p>
-  `;
-  getEl('empty-state').classList.remove('show');
+  resetEmptyState();
   
   // S8: Atualizar título da página dinamicamente para SEO
   document.title = `Busca: ${q} — prompts-ia`;
@@ -128,8 +132,8 @@ async function doSearch() {
     }
   } finally {
     setLoading(false);
-    // Cooldown de 2 segundos para evitar spam
-    setTimeout(() => { isSearching = false; }, 2000);
+    // Cooldown de segurança para evitar spam
+    setTimeout(() => { isSearching = false; }, CONFIG.SEARCH_COOLDOWN_MS);
   }
 }
 
@@ -264,11 +268,7 @@ async function previewSkill(id) {
     // Configura buttons internos do modal
     const dlBtn = getEl('modal-dl-btn');
     if(dlBtn) {
-       dlBtn.onclick = () => {
-         triggerDownload(`${skill.id}.SKILL.md`, cache[id]);
-         showToast(`✓ ${skill.title_pt} — baixado!`);
-         closeModal();
-       };
+       dlBtn.onclick = () => handleDownloadFromPreview(skill, cache[id]);
     }
 
     const copyBtn = getEl('modal-copy-btn');
