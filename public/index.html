@@ -22,6 +22,7 @@
   <header class="topbar">
     <div class="topbar-brand">prompts-ia</div>
     <div class="topbar-right">
+      <span class="active-model-indicator" id="active-model-indicator" style="display: none; color: var(--text-dim); font-size: 11px; margin-right: 12px; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px;"></span>
       <span class="topbar-hint">powered by MIT — dominio público</span>
       <button class="btn-api-key" id="btn-api-key" onclick="openApiKeyModal()">⚙ API Key</button>
     </div>
@@ -135,6 +136,7 @@
       </div>
       <div class="modal-foot">
         <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+        <button class="btn-secondary" id="modal-copy-btn">📋 Copiar</button>
         <button class="btn-dl" id="modal-dl-btn">⬇ Baixar SKILL.md</button>
       </div>
     </div>

@@ -200,6 +200,20 @@ window.previewSkill = async function(id) {
       showToast(`✓ ${skill.title_pt} — baixado!`);
       closeModal();
     };
+
+    const copyBtn = getEl('modal-copy-btn');
+    if (copyBtn) {
+      copyBtn.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(previewCache[id]);
+          showToast('📋 Copiado para a área de transferência!');
+        } catch (err) {
+          console.error('[copySkill]', err);
+          showToast('❌ Erro ao copiar conteúdo.');
+        }
+      };
+    }
+
   } catch (err) {
     getEl('modal-code').textContent = `Erro: ${err.message}`;
   }

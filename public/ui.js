@@ -42,6 +42,16 @@ export function updateApiKeyUI() {
     const key = getApiKey();
     const btn = getEl('btn-api-key');
     const banner = getEl('api-banner');
+    const indicator = getEl('active-model-indicator');
+
+    const currentModelId = getModel();
+    const modelObj = MODELS.find(m => m.id === currentModelId) || MODELS.find(m => m.id === DEFAULT_MODEL);
+    
+    if (indicator && modelObj) {
+        indicator.textContent = `Modelo: ${modelObj.label.replace('🆓 ', '')}`;
+        indicator.style.display = 'inline-block';
+    }
+
     if (key) {
         if (btn) { btn.textContent = '⚙ Configurações ✓'; btn.classList.add('configured'); }
         if (banner) banner.classList.remove('show');
