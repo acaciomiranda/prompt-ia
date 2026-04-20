@@ -151,31 +151,33 @@ code {
 }
 
 .btn-api-key {
-  background: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  color: #000;
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent);
   padding: 8px 16px;
   min-height: 38px;
   font-family: 'DM Mono', monospace;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   letter-spacing: 0.04em;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .btn-api-key:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 15px rgba(255, 75, 43, 0.2);
 }
 
 .btn-api-key.configured {
-  border-color: #000;
+  border-style: solid;
+  border-color: var(--accent);
 }
 
 /* ─── Hero ──────────────────────────────────────────────────────────────── */

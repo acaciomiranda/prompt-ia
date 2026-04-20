@@ -209,6 +209,10 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4.4 — Abril 2026 (Refinamento Estético)
+- ✅ **Suavização de CTA**: O botão de API Key foi redesenhado com um estilo "Ghost-Tint" (contorno e fundo sutil), tornando-o mais profissional e integrado à linguagem visual do site.
+- ✅ **Polimento de Hover**: Transições de cor e elevação suavizadas para uma experiência de usuário mais fluida e menos agressiva visualmente.
+
 ### v2.4.3 — Abril 2026 (UI de Configurações)
 - ✅ **CTA de Configurações**: Botão de API Key agora possui cor vibrante (Laranja/Preto) para facilitar a localização pelo usuário e destacar a ação principal de setup.
 - ✅ **Micro-interações**: Adicionado efeito de elevação e brilho ao pairar sobre o botão de configurações.
