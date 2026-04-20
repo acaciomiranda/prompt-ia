@@ -4,12 +4,21 @@ import {
     getEl, hide, show, setLoading, showToast, renderSkills, 
     updateApiKeyUI, updateRateLimitUI, openApiKeyModal, closeApiKeyModal, closeModal, triggerDownload, escHtml
 } from './ui.js';
+import { AppState } from './state.js';
 
-// Expor funções UI para uso no HTML (onclick=...)
-window.openApiKeyModal = openApiKeyModal;
-window.closeApiKeyModal = closeApiKeyModal;
-window.closeModal = closeModal;
+// Função global injetada apenas se estritamente útil para callbacks externos
 window.updateRateLimitUI = updateRateLimitUI;
+
+// ─── Error Boundary ───────────────────────────────────────────────────────────
+async function withErrorBoundary(fn) {
+    try {
+        await fn();
+    } catch (err) {
+        console.error('[ErrorBoundary]', err);
+        showToast(`❌ Erro inesperado: ${err.message || 'Falha na aplicação'}`);
+        setLoading(false);
+    }
+}
 
 // ─── Histórico de Busca ───────────────────────────────────────────────────────
 function updateSearchHistory(query) {
@@ -33,17 +42,13 @@ function renderSearchHistory() {
     });
 }
 
-// ─── UI State ─────────────────────────────────────────────────────────────────
-let currentSkills  = [];
-let previewCache   = {};
-
 // ─── Search ───────────────────────────────────────────────────────────────────
-window.quickSearch = function(q) {
+function quickSearch(q) {
   getEl('search-input').value = q;
-  window.doSearch();
-};
+  withErrorBoundary(doSearch);
+}
 
-window.doSearch = async function() {
+async function doSearch() {
   const q = getEl('search-input').value.trim();
   if (!q) return;
 
@@ -65,7 +70,7 @@ window.doSearch = async function() {
   // S8: Atualizar título da página dinamicamente para SEO
   document.title = `Busca: ${q} — prompts-ia`;
 
-  previewCache = {};
+  AppState.clear();
 
   try {
     const skills = await fetchSkillsForQuery(q);
@@ -75,7 +80,7 @@ window.doSearch = async function() {
       return;
     }
 
-    currentSkills = skills;
+    AppState.set('skills', skills);
     renderSkills(skills, q);
     updateSearchHistory(q);
     show('results-area');
@@ -102,9 +107,9 @@ window.doSearch = async function() {
   } finally {
     setLoading(false);
   }
-};
+}
 
-window.saveApiKey = function() {
+function saveApiKey() {
   const key   = getEl('apikey-input').value.trim();
   const model = getEl('model-select').value;
 
@@ -191,8 +196,8 @@ license: CC0 1.0 Universal
 
 // ─── Download e Preview ───────────────────────────────────────────────────────
 
-window.downloadSkill = async function(id, btn) {
-  const skill = currentSkills.find(s => s.id === id);
+async function downloadSkill(id, btn) {
+  const skill = AppState.get('skills').find(s => s.id === id);
   if (!skill) return;
 
   const orig = btn.innerHTML;
@@ -201,8 +206,9 @@ window.downloadSkill = async function(id, btn) {
   btn.innerHTML = '⏳ Gerando...';
 
   try {
-    const content = previewCache[id] || await generateSkillMD(skill);
-    previewCache[id] = content;
+    const cache = AppState.get('cache');
+    const content = cache[id] || await generateSkillMD(skill);
+    cache[id] = content;
     triggerDownload(`${skill.id}.SKILL.md`, content);
     showToast(`✓ ${skill.title_pt} — baixado!`);
   } catch (err) {
@@ -213,10 +219,10 @@ window.downloadSkill = async function(id, btn) {
     btn.classList.remove('loading');
     btn.innerHTML = orig;
   }
-};
+}
 
-window.previewSkill = async function(id) {
-  const skill = currentSkills.find(s => s.id === id);
+async function previewSkill(id) {
+  const skill = AppState.get('skills').find(s => s.id === id);
   if (!skill) return;
 
   getEl('modal-title').textContent    = skill.title_pt;
@@ -225,21 +231,27 @@ window.previewSkill = async function(id) {
   getEl('modal').classList.add('show');
 
   try {
-    if (!previewCache[id]) {
-      previewCache[id] = await generateSkillMD(skill);
+    const cache = AppState.get('cache');
+    if (!cache[id]) {
+      cache[id] = await generateSkillMD(skill);
     }
-    getEl('modal-code').textContent = previewCache[id];
-    getEl('modal-dl-btn').onclick = () => {
-      triggerDownload(`${skill.id}.SKILL.md`, previewCache[id]);
-      showToast(`✓ ${skill.title_pt} — baixado!`);
-      closeModal();
-    };
+    getEl('modal-code').textContent = cache[id];
+    
+    // Configura buttons internos do modal
+    const dlBtn = getEl('modal-dl-btn');
+    if(dlBtn) {
+       dlBtn.onclick = () => {
+         triggerDownload(`${skill.id}.SKILL.md`, cache[id]);
+         showToast(`✓ ${skill.title_pt} — baixado!`);
+         closeModal();
+       };
+    }
 
     const copyBtn = getEl('modal-copy-btn');
     if (copyBtn) {
       copyBtn.onclick = async () => {
         try {
-          await navigator.clipboard.writeText(previewCache[id]);
+          await navigator.clipboard.writeText(cache[id]);
           showToast('📋 Copiado para a área de transferência!');
         } catch (err) {
           console.error('[copySkill]', err);
@@ -251,7 +263,7 @@ window.previewSkill = async function(id) {
   } catch (err) {
     getEl('modal-code').textContent = `Erro: ${err.message}`;
   }
-};
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
@@ -260,9 +272,35 @@ document.addEventListener('DOMContentLoaded', () => {
   updateApiKeyUI();
   getEl('search-input').focus();
 
+  // Master Event Delegation
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+    
+    const action = target.dataset.action;
+    
+    if (action === 'openApiKeyModal') openApiKeyModal();
+    if (action === 'closeApiKeyModal') closeApiKeyModal();
+    if (action === 'closeModal') closeModal();
+    if (action === 'doSearch') withErrorBoundary(doSearch);
+    if (action === 'saveApiKey') saveApiKey();
+    if (action === 'quickSearch') {
+        const q = target.dataset.query;
+        if (q) quickSearch(q);
+    }
+    if (action === 'downloadSkill') {
+        const id = target.dataset.skillId;
+        if (id) withErrorBoundary(() => downloadSkill(id, target));
+    }
+    if (action === 'previewSkill') {
+        const id = target.dataset.previewId;
+        if (id) withErrorBoundary(() => previewSkill(id));
+    }
+  });
+
   // Enter para buscar
   getEl('search-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') window.doSearch();
+    if (e.key === 'Enter') withErrorBoundary(doSearch);
   });
 
   // Fechar modal com Escape

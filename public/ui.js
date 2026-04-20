@@ -161,22 +161,14 @@ export function renderSkills(skills, query) {
         <div class="skill-tags">${tagsHtml}</div>
       </div>
       <div class="skill-actions">
-        <button class="btn-dl" id="dl-${safeId}" data-skill-id="${safeId}">
+        <button class="btn-dl" data-action="downloadSkill" data-skill-id="${safeId}">
           ⬇ Baixar SKILL.md
         </button>
-        <button class="btn-secondary" data-preview-id="${safeId}">
+        <button class="btn-secondary" data-action="previewSkill" data-preview-id="${safeId}">
           👁 Visualizar
         </button>
       </div>
     `;
-
-        // Event listeners seguros em vez de onclick inline
-        card.querySelector('.btn-dl').addEventListener('click', function() {
-            window.downloadSkill(safeId, this);
-        });
-        card.querySelector('.btn-secondary').addEventListener('click', function() {
-            window.previewSkill(safeId);
-        });
 
         list.appendChild(card);
     });

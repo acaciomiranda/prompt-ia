@@ -27,7 +27,7 @@
       <span class="rate-limit-indicator" id="rate-limit-indicator" style="display: none; color: var(--accent); font-size: 11px; margin-right: 12px; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px; font-weight: bold;"></span>
       <span class="active-model-indicator" id="active-model-indicator" style="display: none; color: var(--text-dim); font-size: 11px; margin-right: 12px; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px;"></span>
       <span class="topbar-hint">powered by MIT — dominio público</span>
-      <button class="btn-api-key" id="btn-api-key" onclick="openApiKeyModal()">⚙ API Key</button>
+      <button class="btn-api-key" id="btn-api-key" data-action="openApiKeyModal">⚙ API Key</button>
     </div>
   </header>
 
@@ -43,7 +43,7 @@
     <!-- API Key banner -->
     <div class="api-banner" id="api-banner">
       ⚠️ Configure sua API Key do OpenRouter antes de buscar.
-      <a onclick="openApiKeyModal()">Configurar agora →</a>
+      <a data-action="openApiKeyModal" style="cursor: pointer;">Configurar agora →</a>
     </div>
 
     <!-- Search -->
@@ -64,7 +64,7 @@
               </svg>
               Attach files
             </button>
-            <button class="premium-btn btn-outline" onclick="openApiKeyModal()" title="Configurações (Modelo)">
+            <button class="premium-btn btn-outline" data-action="openApiKeyModal" title="Configurações (Modelo)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -76,7 +76,7 @@
               </svg>
             </button>
           </div>
-          <button class="premium-btn btn-send" id="search-btn" onclick="doSearch()" title="Buscar">
+          <button class="premium-btn btn-send" id="search-btn" data-action="doSearch" title="Buscar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -89,14 +89,14 @@
 
     <!-- Quick tags -->
     <div class="quick-tags">
-      <span class="qtag" onclick="quickSearch('design gráfico')">🎨 Design gráfico</span>
-      <span class="qtag" onclick="quickSearch('programação e código')">💻 Programação</span>
-      <span class="qtag" onclick="quickSearch('marketing digital')">📣 Marketing</span>
-      <span class="qtag" onclick="quickSearch('redação e copywriting')">✍️ Copywriting</span>
-      <span class="qtag" onclick="quickSearch('análise de dados')">📊 Dados</span>
-      <span class="qtag" onclick="quickSearch('produtividade e organização')">⚡ Produtividade</span>
-      <span class="qtag" onclick="quickSearch('idiomas e tradução')">🌍 Idiomas</span>
-      <span class="qtag" onclick="quickSearch('roteiro e storytelling')">🎬 Roteiro</span>
+      <span class="qtag" data-action="quickSearch" data-query="design gráfico">🎨 Design gráfico</span>
+      <span class="qtag" data-action="quickSearch" data-query="programação e código">💻 Programação</span>
+      <span class="qtag" data-action="quickSearch" data-query="marketing digital">📣 Marketing</span>
+      <span class="qtag" data-action="quickSearch" data-query="redação e copywriting">✍️ Copywriting</span>
+      <span class="qtag" data-action="quickSearch" data-query="análise de dados">📊 Dados</span>
+      <span class="qtag" data-action="quickSearch" data-query="produtividade e organização">⚡ Produtividade</span>
+      <span class="qtag" data-action="quickSearch" data-query="idiomas e tradução">🌍 Idiomas</span>
+      <span class="qtag" data-action="quickSearch" data-query="roteiro e storytelling">🎬 Roteiro</span>
     </div>
   </section>
 
@@ -133,13 +133,13 @@
           <span class="modal-title" id="modal-title">Preview</span>
           <span class="modal-filename" id="modal-filename"></span>
         </div>
-        <button class="modal-close" onclick="closeModal()" title="Fechar">✕</button>
+        <button class="modal-close" data-action="closeModal" title="Fechar">✕</button>
       </div>
       <div class="modal-body">
         <pre class="modal-code" id="modal-code"></pre>
       </div>
       <div class="modal-foot">
-        <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+        <button class="btn-secondary" data-action="closeModal">Fechar</button>
         <button class="btn-secondary" id="modal-copy-btn">📋 Copiar</button>
         <button class="btn-dl" id="modal-dl-btn">⬇ Baixar SKILL.md</button>
       </div>
@@ -163,8 +163,8 @@
       <select class="apikey-input" id="model-select" style="cursor:pointer"></select>
 
       <div class="apikey-actions">
-        <button class="btn-cancel-key" onclick="closeApiKeyModal()">Cancelar</button>
-        <button class="btn-save-key" onclick="saveApiKey()">Salvar</button>
+        <button class="btn-cancel-key" data-action="closeApiKeyModal">Cancelar</button>
+        <button class="btn-save-key" data-action="saveApiKey">Salvar</button>
       </div>
     </div>
   </div>

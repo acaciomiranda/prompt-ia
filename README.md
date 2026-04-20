@@ -209,7 +209,12 @@ index.html
 
 ## 📝 Histórico de atualizações
 
-### v1.7 — Abril 2026 (Atual)
+### v1.8 — Abril 2026 (Refatoração de Arquitetura)
+- ✅ **State Management**: Refatoração das variáveis espalhadas (como `currentSkills`) para um objeto proxy reativo (`state.js`), melhorando a manutenibilidade.
+- ✅ **Event Delegation**: Substituição de todos os handlers `onclick="..."` inline no HTML em prol de `data-actions` interceptados na raiz do DOM. Zero poluição de variáveis no construtor `window`.
+- ✅ **Error Boundary**: Toda execução assíncrona foi envolvida em um utilitário central `withErrorBoundary()` para prevenção de travamentos silenciosos da UI.
+
+### v1.7 — Abril 2026
 - ✅ **Suporte PWA (Progressive Web App)**: agora o Prompts-IA pode ser instalado no celular e desktop nativamente (`manifest.json` e Service Worker suportados).
 - ✅ **Histórico de Buscas (UX)**: pesquisas recentes são salvas no `localStorage` e exibidas como `<datalist>` no input, acelerando reconsultas.
 - ✅ **Taxímetro de Requisições (Rate Limiting)**: lê e atualiza no top-bar quantas chamadas o modelo atual ainda tem na fila da OpenRouter.
