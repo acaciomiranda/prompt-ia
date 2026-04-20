@@ -57,9 +57,11 @@ export async function callAI({ system, user, maxTokens = CONFIG.MAX_TOKENS, _mod
     const primary = _modelOverride || getModel();
     const chain = [primary, ...FALLBACK_CHAIN.filter(m => m !== primary)];
     let lastError = null;
+    const DEBUG = true; // Flag de debug para monitorar fallback
 
     for (const model of chain) {
         try {
+            if (DEBUG) console.log(`[API] Tentando modelo: ${model}...`);
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), CONFIG.API_TIMEOUT_MS);
 
@@ -104,6 +106,7 @@ export async function callAI({ system, user, maxTokens = CONFIG.MAX_TOKENS, _mod
             return data.choices?.[0]?.message?.content || '';
 
         } catch (err) {
+            if (DEBUG) console.warn(`[API] Falha no modelo ${model}:`, err.message);
             if (err.message === 'API_KEY_INVALID') throw err;
             if (err.name === 'AbortError') {
                 lastError = new Error('Timeout: a IA demorou mais de 30s para responder. Tente novamente.');

@@ -2,15 +2,19 @@
 import { getApiKey, getModel, MODELS, DEFAULT_MODEL, CONFIG } from './api.js';
 
 export function getEl(id) {
-    return document.getElementById(id);
+    const el = document.getElementById(id);
+    if (!el && id !== 'toast') console.warn(`[UI] Elemento #${id} não encontrado no DOM.`);
+    return el;
 }
 
 export function show(id) {
-    getEl(id).style.display = 'block';
+    const el = getEl(id);
+    if (el) el.style.display = 'block';
 }
 
 export function hide(id) {
-    getEl(id).style.display = 'none';
+    const el = getEl(id);
+    if (el) el.style.display = 'none';
 }
 
 export function setLoading(on, label = 'Buscando skills...') {
@@ -40,7 +44,40 @@ export function showToast(msg, duration = CONFIG.TOAST_DURATION_MS) {
     if (!t) return;
     t.textContent = msg;
     t.classList.add('show');
+    t.setAttribute('role', 'alert');
     setTimeout(() => t.classList.remove('show'), duration);
+}
+
+export const ERROR_MESSAGES = {
+    'API_KEY_MISSING': {
+        title: '🔑 API Key não configurada',
+        message: 'Configure sua chave do OpenRouter para continuar.',
+        action: 'Configurar'
+    },
+    'RATE_LIMIT': {
+        title: '⏱️ Limite atingido',
+        message: 'O servidor atingiu o limite de requisições. Tente em instantes.',
+        action: null
+    },
+    'PAYLOAD_PARSE_ERROR': {
+        title: '🧩 Erro de resposta',
+        message: 'A IA enviou um formato inválido. Tentando novamente...',
+        action: 'Retry'
+    }
+};
+
+export function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('prompts_ia_theme', next);
+    showToast(`Tema ${next === 'dark' ? 'Escuro' : 'Claro'} ativado!`);
+}
+
+export function initTheme() {
+    const saved = localStorage.getItem('prompts_ia_theme') || 
+                  (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', saved);
 }
 
 export function escHtml(s) {
@@ -204,6 +241,11 @@ export async function renderSkills(skills, query) {
 
     const list = getEl('skills-list');
     if (!list) return;
+
+    // Exibe botão de baixar tudo se houver skills
+    const dlAll = getEl('btn-download-all');
+    if (dlAll) dlAll.style.display = skills.length > 0 ? 'flex' : 'none';
+
     list.innerHTML = '';
 
     const BATCH_SIZE = CONFIG.BATCH_SIZE;

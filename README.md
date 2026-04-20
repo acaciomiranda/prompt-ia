@@ -209,6 +209,14 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.4 — Abril 2026 (Bugs e Melhorias Avançadas)
+- ✅ **Extermínio de Race Conditions**: Implementado `generatingCache` para evitar múltiplas gerações simultâneas de uma mesma skill.
+- ✅ **Exportação em Lote (ZIP)**: Adicionado suporte à biblioteca `JSZip` para baixar todas as skills de uma busca em um único arquivo comprimido.
+- ✅ **Tema Claro & Acessibilidade**: Implementado toggle de tema (Dark/Light) com persistência no `localStorage` e suporte a `prefers-color-scheme`.
+- ✅ **Robustez no DOM**: Refatoração das funções de UI para prevenir crashes caso elementos esperados não estejam presentes no DOM.
+- ✅ **Normalização de Histórico**: Histórico de busca agora ignora espaços extras e diferenças de caixa Alta/Baixa.
+- ✅ **Mensagens de Erro Categorizadas**: Interface mais informativa para erros de API Key, Rate Limit e Rede.
+
 ### v2.3 — Abril 2026 (Boas Práticas e Código Limpo)
 - ✅ **Configurações Centralizadas**: Eliminação de "Magic Numbers" através do objeto `CONFIG` (`api.js`), centralizando timeouts, limites de histórico e tamanhos de lote.
 - ✅ **Validação de Entrada**: Implementada validação UX no campo de busca (mínimo 3 caracteres ou aviso de campo vazio via Toast).

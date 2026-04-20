@@ -3,7 +3,8 @@ import { getApiKey, saveModel, callAI, extractJSON, CONFIG } from './api.js';
 import { 
     getEl, hide, show, setLoading, showToast, renderSkills, 
     updateApiKeyUI, updateRateLimitUI, openApiKeyModal, closeApiKeyModal, closeModal, 
-    triggerDownload, escHtml, resetEmptyState, handleDownloadFromPreview, openPreviewModal
+    triggerDownload, escHtml, resetEmptyState, handleDownloadFromPreview, openPreviewModal,
+    initTheme, toggleTheme, ERROR_MESSAGES
 } from './ui.js';
 import { AppState } from './state.js';
 
@@ -23,9 +24,10 @@ async function withErrorBoundary(fn) {
 
 // ─── Histórico de Busca ───────────────────────────────────────────────────────
 function updateSearchHistory(query) {
+    const normalize = (s) => s.trim().toLowerCase();
     let history = JSON.parse(localStorage.getItem('prompts_ia_history') || '[]');
-    history = history.filter(item => item.toLowerCase() !== query.toLowerCase()); // Remove duplicado
-    history.unshift(query);
+    history = history.filter(item => normalize(item) !== normalize(query)); // Remove duplicado normalizado
+    history.unshift(query.trim());
     history = history.slice(0, CONFIG.SEARCH_HISTORY_LIMIT); 
     localStorage.setItem('prompts_ia_history', JSON.stringify(history));
     renderSearchHistory();
@@ -153,20 +155,11 @@ function saveApiKey() {
 };
 
 // ─── Geração de Skills ────────────────────────────────────────────────────────
+const generatingCache = new Set();
 
 async function fetchSkillsForQuery(query) {
-  const system = `Você é um gerador de skills para assistentes de IA. 
-Dada uma consulta em português, retorne um array JSON com exatamente 4 skills relevantes.
-
-REGRAS CRÍTICAS:
-- Retorne APENAS o array JSON, sem texto antes ou depois, sem markdown, sem blocos de código
-- Cada objeto deve ter EXATAMENTE estas chaves: id, title_pt, title_en, description_pt, tags, prompt_content, relevance
-- "relevance" deve ser "exact" ou "related"
-- "tags" deve ser um array de 3 strings em inglês
-- "prompt_content" deve ter no máximo 120 palavras
-- "id" deve ser slug em inglês com hífens, sem espaços
-
-FORMATO OBRIGATÓRIO:
+  const system = `Você é um especialista em engenharia de prompts.
+Retorne APENAS um array JSON de objetos com a estrutura:
 [{"id":"slug-aqui","title_pt":"Título em PT","title_en":"Title in EN","description_pt":"Descrição em português de 1-2 frases.","tags":["tag1","tag2","tag3"],"prompt_content":"Prompt profissional em inglês...","relevance":"exact"}]`;
 
   const user = `Consulta do usuário: "${query}"
@@ -248,9 +241,51 @@ async function downloadSkill(id, btn) {
   }
 }
 
+async function downloadAll() {
+  const skills = AppState.get('skills');
+  if (!skills.length) return;
+  
+  const btn = getEl('btn-download-all');
+  if (btn) {
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Gerando ZIP...';
+    
+    try {
+      const zip = new JSZip();
+      const cache = AppState.get('cache');
+      
+      for (const skill of skills) {
+        if (!cache[skill.id]) cache[skill.id] = await generateSkillMD(skill);
+        zip.file(`${skill.id}.SKILL.md`, cache[skill.id]);
+      }
+      
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `prompts-ia-pack.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('📦 Pacote ZIP baixado!');
+    } catch (err) {
+      console.error('[downloadAll]', err);
+      showToast('❌ Erro ao gerar pacote ZIP.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = orig;
+    }
+  }
+}
+
 async function previewSkill(id) {
   const skill = AppState.get('skills').find(s => s.id === id);
   if (!skill) return;
+
+  if (generatingCache.has(id)) {
+    showToast('⏳ Aguarde, a skill já está sendo gerada...');
+    return;
+  }
 
   getEl('modal-preview-title').textContent = skill.title_pt;
   getEl('modal-filename').textContent = `${skill.id}.SKILL.md`;
@@ -259,6 +294,7 @@ async function previewSkill(id) {
   openPreviewModal();
 
   try {
+    generatingCache.add(id);
     const cache = AppState.get('cache');
     if (!cache[id]) {
       cache[id] = await generateSkillMD(skill);
@@ -286,14 +322,18 @@ async function previewSkill(id) {
 
   } catch (err) {
     getEl('modal-code').textContent = `Erro: ${err.message}`;
+  } finally {
+    generatingCache.delete(id);
   }
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderSearchHistory();
+  // Inicialização
+  initTheme();
   updateApiKeyUI();
+  renderSearchHistory();
   getEl('search-input').focus();
 
   // Master Event Delegation
@@ -303,6 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const action = target.dataset.action;
     
+    if (action === 'toggleTheme') toggleTheme();
+    if (action === 'downloadAll') withErrorBoundary(downloadAll);
     if (action === 'openApiKeyModal') openApiKeyModal();
     if (action === 'closeApiKeyModal') closeApiKeyModal();
     if (action === 'closeModal') closeModal();
