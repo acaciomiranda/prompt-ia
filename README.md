@@ -209,6 +209,12 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.5.0 — Abril 2026 (Novas Ações de Busca)
+- ✅ **Hub de Sugestões (Me surpreenda)**: Substituição do antigo botão de upload por uma função criativa que sugere e dispara buscas aleatórias para inspirar novos usuários.
+- ✅ **Quick Clear**: Implementação do botão "Limpar Busca", permitindo resetar o input e a interface com um único clique.
+- ✅ **UX de Busca Aprimorada**: Busca automática ao clicar em sugestões (🎲) para uma navegação sem fricção.
+- ✅ **Refinamento Mobile**: Ajuste de empilhamento e espaçamento dos novos botões em dispositivos móveis.
+
 ### v2.4.5 — Abril 2026 (Correção de Contraste)
 - ✅ **Hotfix Toast**: Corrigida a visibilidade das mensagens flutuantes no modo escuro (antes o texto ficava branco sobre o fundo branco). O Toast agora inverte as cores conforme o tema para garantir leitura instantânea.
 

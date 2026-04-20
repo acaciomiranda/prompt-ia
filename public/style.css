@@ -1069,6 +1069,7 @@ code {
   .premium-actions-left {
     width: 100%;
     flex-direction: column;
+    gap: 10px;
   }
   
   .premium-btn {

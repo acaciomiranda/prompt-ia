@@ -35,7 +35,13 @@ export const CONFIG = {
     SEARCH_DEBOUNCE_MS: 300,
     SEARCH_COOLDOWN_MS: 2000,
     TOAST_DURATION_MS: 3000,
-    BATCH_SIZE: 4
+    BATCH_SIZE: 4,
+    SURPRISE_TERMS: [
+        "Especialista em Python", "Redator de SEO", "Data Scientist", "UI Designer de Apps", 
+        "Arquiteto de Microsserviços", "Copywriting para E-commerce", "Especialista em Docker", 
+        "Analista de Cibersegurança", "Professor de Inglês", "Estrategista de Marketing",
+        "Desenvolvedor Frontend React", "Engenheiro de Prompt"
+    ]
 };
 
 export function getApiKey() { 

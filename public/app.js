@@ -70,6 +70,23 @@ function quickSearch(q) {
   debouncedSearch();
 }
 
+function handleSurpriseMe() {
+  const terms = CONFIG.SURPRISE_TERMS;
+  const randomTerm = terms[Math.floor(Math.random() * terms.length)];
+  quickSearch(randomTerm);
+  showToast(`🎲 Sugestão: ${randomTerm}`);
+}
+
+function handleClearSearch() {
+  const input = getEl('search-input');
+  input.value = '';
+  input.focus();
+  hide('results-area');
+  resetEmptyState();
+  document.title = 'prompts-ia';
+  showToast('🧹 Busca limpa');
+}
+
 async function doSearch() {
   if (isSearching) return;
   
@@ -354,6 +371,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = target.dataset.query;
         if (q) quickSearch(q);
     }
+    if (action === 'surpriseMe') handleSurpriseMe();
+    if (action === 'clearSearch') handleClearSearch();
     if (action === 'downloadSkill') {
         const id = target.dataset.skillId;
         if (id) withErrorBoundary(() => downloadSkill(id, target));

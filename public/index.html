@@ -82,16 +82,27 @@
         <datalist id="search-history"></datalist>
         <div class="premium-search-actions">
           <div class="premium-actions-left">
-            <button class="premium-btn btn-outline btn-disabled" disabled aria-label="Upload de arquivos — em breve" aria-describedby="attach-hint">
+            <button class="premium-btn btn-outline" data-action="surpriseMe" aria-label="Me surpreenda com uma sugestão">
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
+                <path d="m2 22 1-1h3l9-9"></path>
+                <path d="M14 6l6 6"></path>
+                <path d="M18 2l2 2"></path>
+                <path d="m20 2-2 2"></path>
+                <path d="m11 7 2 2"></path>
+                <path d="m7 11 2 2"></path>
               </svg>
-              Attach files
+              Me surpreenda
             </button>
-            <span id="attach-hint" class="sr-only">Funcionalidade em desenvolvimento.</span>
+            <button class="premium-btn btn-outline" data-action="clearSearch" aria-label="Limpar busca">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              </svg>
+              Limpar
+            </button>
             <button class="premium-btn btn-outline" data-action="openApiKeyModal" aria-label="Configurações de Modelo e Raciocínio">
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
