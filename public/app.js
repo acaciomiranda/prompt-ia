@@ -30,10 +30,17 @@ function updateSearchHistory(query) {
     renderSearchHistory();
 }
 
+let lastHistoryStr = '';
 function renderSearchHistory() {
     const list = getEl('search-history');
     if (!list) return;
-    const history = JSON.parse(localStorage.getItem('prompts_ia_history') || '[]');
+    
+    const historyStr = localStorage.getItem('prompts_ia_history') || '[]';
+    // Otimização de Perfomance: Retorna cedo se o estado JSON é idêntico para evitar DOM Thrashing
+    if (historyStr === lastHistoryStr) return; 
+    lastHistoryStr = historyStr;
+    
+    const history = JSON.parse(historyStr);
     list.innerHTML = '';
     history.forEach(item => {
         const opt = document.createElement('option');
@@ -42,10 +49,20 @@ function renderSearchHistory() {
     });
 }
 
+// ─── Debounce Utils ───────────────────────────────────────────────────────────
+function debounce(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+const debouncedSearch = debounce(() => withErrorBoundary(doSearch), 300);
+
 // ─── Search ───────────────────────────────────────────────────────────────────
 function quickSearch(q) {
   getEl('search-input').value = q;
-  withErrorBoundary(doSearch);
+  debouncedSearch();
 }
 
 async function doSearch() {
@@ -282,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (action === 'openApiKeyModal') openApiKeyModal();
     if (action === 'closeApiKeyModal') closeApiKeyModal();
     if (action === 'closeModal') closeModal();
-    if (action === 'doSearch') withErrorBoundary(doSearch);
+    if (action === 'doSearch') debouncedSearch();
     if (action === 'saveApiKey') saveApiKey();
     if (action === 'quickSearch') {
         const q = target.dataset.query;
@@ -300,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Enter para buscar
   getEl('search-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') withErrorBoundary(doSearch);
+    if (e.key === 'Enter') debouncedSearch();
   });
 
   // Fechar modal com Escape
@@ -321,6 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Enter na input da API key
   getEl('apikey-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') window.saveApiKey();
+    if (e.key === 'Enter') saveApiKey();
   });
 });

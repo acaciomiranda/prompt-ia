@@ -209,6 +209,13 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v1.9 — Abril 2026 (Performance e Otimização)
+- ✅ **Font Loading**: Implementado carregamento assíncrono de fontes com `preload` e técnica de deferred loading (melhoria em LCP/FCP).
+- ✅ **Batch Character Rendering**: Renderização de cards em lotes (batching) com `requestAnimationFrame` para evitar travamentos da Main-Thread.
+- ✅ **Debounce de Busca**: Adicionado atraso inteligente no processamento de teclas para evitar submissões duplicadas e sobrecarga da API.
+- ✅ **DOM Thrashing Prevention**: Cache lógico no renderizador do histórico de busca para evitar relayouts desnecessários.
+- ✅ **Estratégia de Cache (PWA)**: Service Worker atualizado para `Stale-While-Revalidate`, garantindo carregamento instantâneo de recursos estáticos.
+
 ### v1.8 — Abril 2026 (Refatoração de Arquitetura)
 - ✅ **State Management**: Refatoração das variáveis espalhadas (como `currentSkills`) para um objeto proxy reativo (`state.js`), melhorando a manutenibilidade.
 - ✅ **Event Delegation**: Substituição de todos os handlers `onclick="..."` inline no HTML em prol de `data-actions` interceptados na raiz do DOM. Zero poluição de variáveis no construtor `window`.

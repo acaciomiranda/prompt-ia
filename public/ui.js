@@ -128,7 +128,7 @@ export function triggerDownload(filename, content) {
     URL.revokeObjectURL(url);
 }
 
-export function renderSkills(skills, query) {
+export async function renderSkills(skills, query) {
     const resultsTitle = getEl('results-title');
     if (resultsTitle) {
         resultsTitle.innerHTML = `<strong>${skills.length} skills</strong> encontradas para <strong>"${escHtml(query)}"</strong>`;
@@ -138,19 +138,24 @@ export function renderSkills(skills, query) {
     if (!list) return;
     list.innerHTML = '';
 
-    skills.forEach((skill, index) => {
-        const badgeClass = skill.relevance === 'exact' ? 'badge-exact' : 'badge-related';
-        const badgeLabel = skill.relevance === 'exact' ? 'EXATA' : 'RELACIONADA';
-        const tagsHtml = (skill.tags || []).slice(0, 4)
-            .map(t => `<span class="stag">${escHtml(t)}</span>`).join('');
+    const BATCH_SIZE = 4;
+    for (let i = 0; i < skills.length; i += BATCH_SIZE) {
+        const batch = skills.slice(i, i + BATCH_SIZE);
+        
+        batch.forEach((skill, batchIndex) => {
+            const index = i + batchIndex;
+            const badgeClass = skill.relevance === 'exact' ? 'badge-exact' : 'badge-related';
+            const badgeLabel = skill.relevance === 'exact' ? 'EXATA' : 'RELACIONADA';
+            const tagsHtml = (skill.tags || []).slice(0, 4)
+                .map(t => `<span class="stag">${escHtml(t)}</span>`).join('');
 
-        // Sanitiza o ID para prevenir injeção de código via resposta da IA
-        const safeId = String(skill.id || '').replace(/[^a-z0-9\-_]/gi, '');
+            // Sanitiza o ID para prevenir injeção de código via resposta da IA
+            const safeId = String(skill.id || '').replace(/[^a-z0-9\-_]/gi, '');
 
-        const card = document.createElement('div');
-        card.className = 'skill-card fade-in-up';
-        card.style.animationDelay = `${index * 0.12}s`;
-        card.innerHTML = `
+            const card = document.createElement('div');
+            card.className = 'skill-card fade-in-up';
+            card.style.animationDelay = `${index * 0.12}s`;
+            card.innerHTML = `
       <div class="skill-card-body">
         <div class="skill-card-head">
           <span class="skill-name">${escHtml(skill.title_pt)}</span>
@@ -169,7 +174,10 @@ export function renderSkills(skills, query) {
         </button>
       </div>
     `;
+            list.appendChild(card);
+        });
 
-        list.appendChild(card);
-    });
+        // Yield to main thread (Batching) para manter 60FPS
+        await new Promise(resolve => requestAnimationFrame(resolve));
+    }
 }
