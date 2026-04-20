@@ -33,6 +33,7 @@
 </head>
 
 <body>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
   <!-- ── Top Bar ─────────────────────────────────────────────── -->
   <header class="topbar">
@@ -41,13 +42,16 @@
       <span class="rate-limit-indicator" id="rate-limit-indicator" style="display: none; color: var(--accent); font-size: 11px; margin-right: 12px; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px; font-weight: bold;"></span>
       <span class="active-model-indicator" id="active-model-indicator" style="display: none; color: var(--text-dim); font-size: 11px; margin-right: 12px; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px;"></span>
       <span class="topbar-hint">powered by MIT — dominio público</span>
-      <button class="btn-api-key" id="btn-api-key" data-action="openApiKeyModal">⚙ API Key</button>
+      <button class="btn-api-key" id="btn-api-key" data-action="openApiKeyModal" aria-label="Alterar configurações da API Key e Modelo">
+        <span aria-hidden="true">⚙</span> API Key
+      </button>
     </div>
   </header>
 
-  <!-- ── Hero ───────────────────────────────────────────────── -->
-  <section class="hero">
-    <div class="hero-eyebrow">✦ Skills para IA</div>
+  <main id="main-content">
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-eyebrow">✦ Skills para IA</div>
     <h1>Encontre a <em>skill</em> certa,<br>baixe na hora.</h1>
     <p>
       Digite a habilidade que você precisa. A IA busca, gera e entrega
@@ -64,13 +68,15 @@
     <div class="premium-search-container">
       <div class="glow-bg"></div>
       <div class="search-wrap premium-glass">
+        <label for="search-input" class="sr-only">Buscar skills para IA</label>
         <input class="search-input premium-input" type="text" id="search-input" placeholder="Como posso te ajudar?"
-          autocomplete="off" spellcheck="false" list="search-history">
+          autocomplete="off" spellcheck="false" list="search-history" aria-describedby="search-hint">
+        <span id="search-hint" class="sr-only">Digite a habilidade que você precisa e pressione Enter.</span>
         <datalist id="search-history"></datalist>
         <div class="premium-search-actions">
           <div class="premium-actions-left">
-            <button class="premium-btn btn-outline btn-disabled" title="Em breve" disabled>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <button class="premium-btn btn-outline btn-disabled" disabled aria-label="Upload de arquivos — em breve" aria-describedby="attach-hint">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
@@ -78,20 +84,21 @@
               </svg>
               Attach files
             </button>
-            <button class="premium-btn btn-outline" data-action="openApiKeyModal" title="Configurações (Modelo)">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <span id="attach-hint" class="sr-only">Funcionalidade em desenvolvimento.</span>
+            <button class="premium-btn btn-outline" data-action="openApiKeyModal" aria-label="Configurações de Modelo e Raciocínio">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
               Deep thinking
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
           </div>
-          <button class="premium-btn btn-send" id="search-btn" data-action="doSearch" title="Buscar">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          <button class="premium-btn btn-send" id="search-btn" data-action="doSearch" aria-label="Iniciar busca">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -118,10 +125,10 @@
   <main class="main" id="main">
 
     <!-- Loading -->
-    <div class="loading-state" id="loading">
-      <div class="spinner"></div>
-      <div class="loading-label" id="loading-label">Consultando a IA...</div>
-    </div>
+  <div class="loading-state" id="loading" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <div class="loading-label" id="loading-label">Consultando a IA...</div>
+  </div>
 
     <!-- Results -->
     <div id="results-area">
@@ -140,17 +147,17 @@
   </main>
 
   <!-- ── Preview Modal ───────────────────────────────────────── -->
-  <div class="modal-overlay" id="modal">
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-preview-title">
     <div class="modal">
       <div class="modal-head">
         <div style="display:flex;align-items:center;gap:10px;min-width:0">
-          <span class="modal-title" id="modal-title">Preview</span>
+          <span class="modal-title" id="modal-preview-title">Preview</span>
           <span class="modal-filename" id="modal-filename"></span>
         </div>
-        <button class="modal-close" data-action="closeModal" title="Fechar">✕</button>
+        <button class="modal-close" data-action="closeModal" aria-label="Fechar preview">✕</button>
       </div>
       <div class="modal-body">
-        <pre class="modal-code" id="modal-code"></pre>
+        <pre class="modal-code" id="modal-code" tabindex="0"></pre>
       </div>
       <div class="modal-foot">
         <button class="btn-secondary" data-action="closeModal">Fechar</button>
@@ -161,24 +168,24 @@
   </div>
 
   <!-- ── Configurações Modal ───────────────────────────────────── -->
-  <div class="apikey-modal" id="apikey-modal">
+  <div class="apikey-modal" id="apikey-modal" role="dialog" aria-modal="true" aria-labelledby="modal-api-title">
     <div class="apikey-box">
-      <h2>⚙ Configurações</h2>
+      <h2 id="modal-api-title"><span aria-hidden="true">⚙</span> Configurações</h2>
       <p>
-        Acesse <strong><a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></strong>,
+        Acesse <strong><a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a></strong>,
         gere uma API Key e cole abaixo. A chave fica salva apenas no seu browser.
       </p>
 
-      <label class="apikey-label">API Key (OpenRouter)</label>
+      <label class="apikey-label" for="apikey-input">API Key (OpenRouter)</label>
       <input class="apikey-input" type="password" id="apikey-input" placeholder="sk-or-v1-..." autocomplete="off"
         spellcheck="false">
 
-      <label class="apikey-label" style="margin-top:14px">Modelo</label>
+      <label class="apikey-label" for="model-select" style="margin-top:14px">Modelo</label>
       <select class="apikey-input" id="model-select" style="cursor:pointer"></select>
 
       <div class="apikey-actions">
-        <button class="btn-cancel-key" data-action="closeApiKeyModal">Cancelar</button>
-        <button class="btn-save-key" data-action="saveApiKey">Salvar</button>
+        <button class="btn-cancel-key" data-action="closeApiKeyModal" aria-label="Cancelar e fechar configurações">Cancelar</button>
+        <button class="btn-save-key" data-action="saveApiKey" aria-label="Salvar configurações">Salvar</button>
       </div>
     </div>
   </div>

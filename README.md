@@ -209,6 +209,13 @@ index.html
 
 ## 📝 Histórico de atualizações
 
+### v2.1 — Abril 2026 (Acessibilidade e Inclusão)
+- ✅ **Focus Management & Trap**: Implementado controle de foco rígido em modais (`ui.js`). O foco agora é capturado ao abrir, mantido dentro do modal (trap) e restaurado ao fechar.
+- ✅ **Semântica ARIA**: Adição de `aria-label`, `aria-hidden` e `aria-modal` para melhor experiência com leitores de tela.
+- ✅ **Skip Links & Nav**: Adicionado "Skip to Main Content" para usuários de teclado. Todos os inputs agora possuem labels associados (visíveis ou via `.sr-only`).
+- ✅ **Contraste WCAG AAA**: Ajuste de cores para conformidade com padrões internacionais de visão.
+- ✅ **Aria-Live Status**: Anúncios dinâmicos para estados de carregamento ("Consultando a IA...") via `role="status"`.
+
 ### v2.0 — Abril 2026 (Segurança e Robustez)
 - ✅ **Content Security Policy (CSP)**: Implementada Meta Tag CSP rigorosa para mitigar XSS e exfiltração de dados (bloqueio de origens não autorizadas).
 - ✅ **Validação Estrita de API Key**: O sistema agora valida o formato oficial do OpenRouter (`sk-or-v1-`) antes de aceitar a chave, prevenindo o uso de dados corrompidos.

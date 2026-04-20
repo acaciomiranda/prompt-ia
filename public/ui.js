@@ -101,19 +101,68 @@ export function populateModelSelect() {
     if (!sel.value) sel.value = DEFAULT_MODEL;
 }
 
+let lastFocus = null;
+
+function setupFocusTrap(modalId, closeFn) {
+    const modal = getEl(modalId);
+    if (!modal) return;
+    
+    const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    const trap = (e) => {
+        if (e.key === 'Tab') {
+            if (e.shiftKey && document.activeElement === firstFocusable) {
+                e.preventDefault();
+                lastFocusable.focus();
+            } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                e.preventDefault();
+                firstFocusable.focus();
+            }
+        }
+        if (e.key === 'Escape') closeFn();
+    };
+
+    modal._trapHandler = trap; // Guarda para remoção
+    modal.addEventListener('keydown', trap);
+}
+
+function removeFocusTrap(modalId) {
+    const modal = getEl(modalId);
+    if (modal && modal._trapHandler) {
+        modal.removeEventListener('keydown', modal._trapHandler);
+        delete modal._trapHandler;
+    }
+}
+
 export function openApiKeyModal() {
+    lastFocus = document.activeElement;
     populateModelSelect();
     getEl('apikey-input').value = getApiKey();
     getEl('apikey-modal').classList.add('show');
     getEl('apikey-input').focus();
+    setupFocusTrap('apikey-modal', closeApiKeyModal);
 }
 
 export function closeApiKeyModal() {
     getEl('apikey-modal').classList.remove('show');
+    removeFocusTrap('apikey-modal');
+    if (lastFocus) lastFocus.focus();
 }
 
 export function closeModal() {
     getEl('modal').classList.remove('show');
+    removeFocusTrap('modal');
+    if (lastFocus) lastFocus.focus();
+}
+
+// Preview Modal (chamado em app.js) precisa de track de foco também
+export function openPreviewModal() {
+    lastFocus = document.activeElement;
+    getEl('modal').classList.add('show');
+    getEl('modal-code').focus(); // Foco no código para leitura
+    setupFocusTrap('modal', closeModal);
 }
 
 export function triggerDownload(filename, content) {

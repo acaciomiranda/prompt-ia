@@ -248,10 +248,11 @@ async function previewSkill(id) {
   const skill = AppState.get('skills').find(s => s.id === id);
   if (!skill) return;
 
-  getEl('modal-title').textContent    = skill.title_pt;
+  getEl('modal-preview-title').textContent = skill.title_pt;
   getEl('modal-filename').textContent = `${skill.id}.SKILL.md`;
   getEl('modal-code').textContent     = '⏳ Gerando preview...';
-  getEl('modal').classList.add('show');
+  
+  openPreviewModal();
 
   try {
     const cache = AppState.get('cache');
