@@ -75,15 +75,7 @@ A aplicação usa a **OpenRouter API** — um gateway unificado que dá acesso a
 
 > A chave fica salva **apenas no seu browser** (localStorage). Nunca é enviada para nenhum servidor além do OpenRouter.
 
----
 
-## Changelog
-
-### v1.7 — Abril 2026 (Atual)
-- ✅ **Suporte PWA (Progressive Web App)**: agora o Prompts-IA pode ser instalado no celular e desktop nativamente (`manifest.json` e Service Worker suportados).
-- ✅ **Histórico de Buscas (UX)**: pesquisas recentes são salvas no `localStorage` e exibidas como `<datalist>` no input, acelerando reconsultas.
-- ✅ **Taxímetro de Requisições (Rate Limiting)**: lê e atualiza no top-bar quantas chamadas o modelo atual ainda tem na fila da OpenRouter.
-- ✅ **Apresentação em Staggered Fade-in**: cards agora desenham na tela suavemente usando *CSS Cascading Animation*.
 
 ## 🤖 Modelos disponíveis
 
@@ -216,6 +208,12 @@ index.html
 ---
 
 ## 📝 Histórico de atualizações
+
+### v1.7 — Abril 2026 (Atual)
+- ✅ **Suporte PWA (Progressive Web App)**: agora o Prompts-IA pode ser instalado no celular e desktop nativamente (`manifest.json` e Service Worker suportados).
+- ✅ **Histórico de Buscas (UX)**: pesquisas recentes são salvas no `localStorage` e exibidas como `<datalist>` no input, acelerando reconsultas.
+- ✅ **Taxímetro de Requisições (Rate Limiting)**: lê e atualiza no top-bar quantas chamadas o modelo atual ainda tem na fila da OpenRouter.
+- ✅ **Apresentação em Staggered Fade-in**: cards agora desenham na tela suavemente usando *CSS Cascading Animation*.
 
 ### v1.6 — Abril 2026
 - ✅ **Favicon adicionado**: ícone `brain.svg` 🧠 aparece na aba do browser
