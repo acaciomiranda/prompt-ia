@@ -211,6 +211,8 @@ index.html
 
 ### v1.6 — Abril 2026
 - ✅ **Favicon adicionado**: ícone `brain.svg` 🧠 aparece na aba do browser
+- ✅ **Indicador de modelo ativo**: mostra o modelo em uso diretamente na topbar
+- ✅ **Botão de Copiar**: novo botão no modal de preview para copiar a skill gerada com 1 clique
 - ✅ **Timeout de 30s na API**: uso de `AbortController` para cancelar chamadas lentas e tentar o próximo modelo automaticamente
 - ✅ **Sanitização de `skill.id`**: IDs retornados pela IA passam por regex `/[^a-z0-9\-_]/gi` antes de qualquer uso
 - ✅ **Event listeners seguros**: botões de ação migrados de `onclick` inline para `addEventListener`, eliminando risco de injeção via resposta da IA
