@@ -73,7 +73,7 @@ function quickSearch(q) {
 function handleSurpriseMe() {
   const terms = CONFIG.SURPRISE_TERMS;
   const randomTerm = terms[Math.floor(Math.random() * terms.length)];
-  quickSearch(randomTerm);
+  getEl('search-input').value = randomTerm;
   showToast(`🎲 Sugestão: ${randomTerm}`);
 }
 
